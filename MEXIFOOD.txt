@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEXI FOOD</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        form {
+            max-width: 300px;
+            margin: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        button {
+            background-color: #28a745;
+            color: gold;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h2>Haz tu pedido</h2>
+    <p>Todos los platillos incluyen la bebida de su preferencia por $80</p>
+    <form id="pedidoForm">
+        <input type="text" id="nombre" placeholder="Tu nombre" required>
+        <select id="platillo" required onchange="toggleIngredientes()">
+            <option value="Chilaquiles">Chilaquiles</option>
+            <option value="Torta de Pollo">Torta de Pollo</option>
+        </select>
+        <div id="ingredientes" style="display: none;">
+            <label><input type="checkbox" value="Jamón"> Jamón</label>
+            <label><input type="checkbox" value="Queso"> Queso</label>
+            <label><input type="checkbox" value="Lechuga"> Lechuga</label>
+            <label><input type="checkbox" value="Aguacate"> Aguacate</label>
+            <label><input type="checkbox" value="Tomate"> Tomate</label>
+        </div>
+        <select id="bebida" required onchange="toggleAguaOpciones()">
+            <option value="Pepsi">Pepsi</option>
+            <option value="Agua Natural">Agua Natural</option>
+        </select>
+        <div id="aguaOpciones" style="display: none;">
+            <label><input type="radio" name="agua" value="Jamaica"> Jamaica</label>
+            <label><input type="radio" name="agua" value="Pepino con Limón"> Pepino con Limón</label>
+        </div>
+        <button type="button" onclick="enviarPedido()">Enviar Pedido</button>
+    </form>
+
+    <script>
+        function toggleIngredientes() {
+            let platillo = document.getElementById('platillo').value;
+            let ingredientesDiv = document.getElementById('ingredientes');
+            if (platillo === "Torta de Pollo") {
+                ingredientesDiv.style.display = "block";
+            } else {
+                ingredientesDiv.style.display = "none";
+            }
+        }
+
+        function toggleAguaOpciones() {
+            let bebida = document.getElementById('bebida').value;
+            let aguaOpcionesDiv = document.getElementById('aguaOpciones');
+            if (bebida === "Agua Natural") {
+                aguaOpcionesDiv.style.display = "block";
+            } else {
+                aguaOpcionesDiv.style.display = "none";
+            }
+        }
+
+        function enviarPedido() {
+            let nombre = document.getElementById('nombre').value;
+            let platillo = document.getElementById('platillo').value;
+            let bebida = document.getElementById('bebida').value;
+            let ingredientes = [];
+            document.querySelectorAll('#ingredientes input:checked').forEach(el => ingredientes.push(el.value));
+            let ingredientesTexto = ingredientes.length > 0 ? ` con ${ingredientes.join(", ")}` : "";
+            
+            let aguaSeleccion = "";
+            if (bebida === "Agua Natural") {
+                let aguaOpciones = document.querySelector('input[name="agua"]:checked');
+                if (aguaOpciones) {
+                    aguaSeleccion = ` de ${aguaOpciones.value}`;
+                }
+            }
+            
+            let telefono = '8445067926'; // 8445067926
+            let mensaje = `Hola, mi nombre es ${nombre}. Quiero pedir ${platillo}${ingredientesTexto} con ${bebida}${aguaSeleccion}.`;
+            let url = `https://wa.me/${telefono}?text=${encodeURIComponent(mensaje)}`;
+            window.open(url, '_blank');
+        }
+    </script>
+</body>
+</html>
